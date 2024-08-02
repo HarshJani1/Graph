@@ -8,7 +8,7 @@ public class Graph {
     this.V = V;
     adj = new ArrayList<>(V);
     for (int i = 0; i < V; i++) {
-      adj.add(new LinkedList<>());
+      adj.add(new LinkedList<Integer>());
     }
   }
 
@@ -35,8 +35,8 @@ public class Graph {
   }
 
   public void KosaRajuAlgo() {
-    Stack<Integer> st = new Stack<>();
-    Set<Integer> visited = new HashSet<>();
+    Stack<Integer> st = new Stack<Integer>();
+    Set<Integer> visited = new HashSet<Integer>();
     for (int i = 0; i < V; i++) {
       if (!visited.contains(i)) {
         topoLogicalSort(i, visited, st);
@@ -45,7 +45,7 @@ public class Graph {
 
     List<List<Integer>> transpose = new ArrayList<>(V);
     for (int i = 0; i < V; i++) {
-      transpose.add(new LinkedList<>());
+      transpose.add(new LinkedList<Integer>());
     }
     reverseGraph(transpose);
 
@@ -72,7 +72,7 @@ public class Graph {
 
   public void bfs(int startNode) {
     boolean[] visited = new boolean[V];
-    Queue<Integer> queue = new LinkedList<>();
+    Queue<Integer> queue = new LinkedList<Integer>();
 
     visited[startNode] = true;
     queue.add(startNode);
@@ -161,5 +161,41 @@ public class Graph {
     }
 
     return res;
+  }
+
+  public boolean isBipartite() {
+    int[] color = new int[V];
+    Arrays.fill(color, -1); 
+
+    for (int i = 0; i < V; i++) {
+      if (color[i] == -1) {
+        if (!isBipartiteUtil(i, color)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  public boolean isBipartiteUtil(int node, int[] color) {
+    Queue<Integer> queue = new LinkedList<Integer>();
+    queue.add(node);
+    color[node] = 0;
+
+    while (!queue.isEmpty()) {
+      int current = queue.poll();
+
+      for (int neighbor : adj.get(current)) {
+        if (color[neighbor] == -1) {
+          color[neighbor] = 1 - color[current]; 
+          queue.add(neighbor);
+        } else if (color[neighbor] == color[current]) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }
