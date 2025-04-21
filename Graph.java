@@ -35,8 +35,8 @@ public class Graph {
   }
 
   public void KosaRajuAlgo() {
-    Stack<Integer> st = new Stack<Integer>();
-    Set<Integer> visited = new HashSet<Integer>();
+    Stack<Integer> st = new Stack<>();
+    Set<Integer> visited = new HashSet<>();
     for (int i = 0; i < V; i++) {
       if (!visited.contains(i)) {
         topoLogicalSort(i, visited, st);
@@ -45,7 +45,7 @@ public class Graph {
 
     List<List<Integer>> transpose = new ArrayList<>(V);
     for (int i = 0; i < V; i++) {
-      transpose.add(new LinkedList<Integer>());
+      transpose.add(new LinkedList<>());
     }
     reverseGraph(transpose);
 
@@ -54,7 +54,7 @@ public class Graph {
       int curr = st.pop();
       if (!visited.contains(curr)) {
         dfs(transpose, curr, visited);
-        System.out.println(); // Print a new line for each SCC
+        System.out.println();
       }
     }
   }
@@ -62,7 +62,6 @@ public class Graph {
   private void dfs(List<List<Integer>> transpose, int node, Set<Integer> visited) {
     visited.add(node);
     System.out.print(node + " ");
-
     for (int neighbor : transpose.get(node)) {
       if (!visited.contains(neighbor)) {
         dfs(transpose, neighbor, visited);
@@ -72,7 +71,7 @@ public class Graph {
 
   public void bfs(int startNode) {
     boolean[] visited = new boolean[V];
-    Queue<Integer> queue = new LinkedList<Integer>();
+    Queue<Integer> queue = new LinkedList<>();
 
     visited[startNode] = true;
     queue.add(startNode);
@@ -141,8 +140,7 @@ public class Graph {
     return false;
   }
 
-  List<Integer> eventualSafeNodes() {
-
+  public List<Integer> eventualSafeNodes() {
     boolean[] visited = new boolean[V];
     boolean[] pathVis = new boolean[V];
     boolean[] check = new boolean[V];
@@ -153,7 +151,7 @@ public class Graph {
       }
     }
 
-    List<Integer> res = new ArrayList<Integer>();
+    List<Integer> res = new ArrayList<>();
     for (int i = 0; i < V; i++) {
       if (check[i]) {
         res.add(i);
@@ -165,7 +163,7 @@ public class Graph {
 
   public boolean isBipartite() {
     int[] color = new int[V];
-    Arrays.fill(color, -1); 
+    Arrays.fill(color, -1);
 
     for (int i = 0; i < V; i++) {
       if (color[i] == -1) {
@@ -179,16 +177,15 @@ public class Graph {
   }
 
   public boolean isBipartiteUtil(int node, int[] color) {
-    Queue<Integer> queue = new LinkedList<Integer>();
+    Queue<Integer> queue = new LinkedList<>();
     queue.add(node);
     color[node] = 0;
 
     while (!queue.isEmpty()) {
       int current = queue.poll();
-
       for (int neighbor : adj.get(current)) {
         if (color[neighbor] == -1) {
-          color[neighbor] = 1 - color[current]; 
+          color[neighbor] = 1 - color[current];
           queue.add(neighbor);
         } else if (color[neighbor] == color[current]) {
           return false;
@@ -197,5 +194,35 @@ public class Graph {
     }
 
     return true;
+  }
+
+  public void dfsTraversal(int startNode) {
+    boolean[] visited = new boolean[V];
+    dfsUtil(startNode, visited);
+    System.out.println();
+  }
+
+  private void dfsUtil(int node, boolean[] visited) {
+    visited[node] = true;
+    System.out.print(node + " ");
+    for (int neighbor : adj.get(node)) {
+      if (!visited[neighbor]) {
+        dfsUtil(neighbor, visited);
+      }
+    }
+  }
+
+  public int countConnectedComponents() {
+    boolean[] visited = new boolean[V];
+    int count = 0;
+
+    for (int i = 0; i < V; i++) {
+      if (!visited[i]) {
+        dfsUtil(i, visited);
+        count++;
+      }
+    }
+
+    return count;
   }
 }
